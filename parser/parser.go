@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func LoadPlugins(c chan string) {
+func LoadPlugins(c chan string, parsed chan string) {
 	r, err := regexp.Compile(`([A-Za-z]+\s+\d+\s+\d+\:\d+\:\d+) ([^ ]+) ([^\:]+)`)
 
 	if err != nil {
@@ -15,8 +15,9 @@ func LoadPlugins(c chan string) {
 	for {
 		select {
 		case msg := <-c:
-			matches := r.FindAllString(msg, -1)
-			log.Println(matches)
+			m := r.FindAllString(msg, -1)
+			log.Print(m)
+			parsed <- msg
 		}
 	}
 

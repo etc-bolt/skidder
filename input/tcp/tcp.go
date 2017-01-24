@@ -15,6 +15,7 @@ func ListenAndServe(ch chan string) {
 	}
 	for {
 		conn, err := l.Accept()
+		log.Println("New incomming connection")
 		if err != nil {
 			log.Printf("%v", err.Error())
 		}
@@ -25,11 +26,13 @@ func ListenAndServe(ch chan string) {
 
 func handleConnection(c net.Conn, ch chan string){
 	defer c.Close()
-	message, err := bufio.NewReader(c).ReadString('\n')
+	for {
+		message, err := bufio.NewReader(c).ReadString('\n')
+		if err != nil {
+			log.Println(err)
+			break
+		}
 
-	if err != nil {
-		log.Println(err)
+		ch <- message;
 	}
-
-	ch <- message;
 }

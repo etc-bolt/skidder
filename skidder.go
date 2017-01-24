@@ -9,13 +9,14 @@ import (
 
 func main() {
 
-	c := make(chan string)
+	raw := make(chan string)
+	parsed := make(chan string)
 
 	log.Print("bootstraping skidder log mangement system.")
 
-	go input.LoadPlugins(c)
-	go parser.LoadPlugins(c)
+	go input.LoadPlugins(raw)
+	go parser.LoadPlugins(raw, parsed)
 
-	output.LoadPlugins(c)
+	output.LoadPlugins(parsed)
 
 }
